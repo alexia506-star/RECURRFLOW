@@ -1,15 +1,15 @@
+// Load environment variables first, before any other imports
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
-import dotenv from 'dotenv';
 import session from 'express-session';
 import passport from './middleware/auth';
 import authRoutes from './routes/auth';
 import recurringTaskRoutes from './routes/recurringTasks';
 import { startScheduler } from './lib/scheduler';
-
-// Load environment variables
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
