@@ -1,0 +1,101 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model RecurringTask {
+  id                    String   @id @default(uuid())
+  mondayAccountId       String   @map("monday_account_id")
+  boardId               String   @map("board_id")
+  templateItemId        String   @map("template_item_id")
+  name                  String
+  recurrenceType        String   @map("recurrence_type") // daily, weekly, monthly, yearly
+  recurrenceValue       Json     @map("recurrence_value") // {interval: 2, days: [1,3,5], skipWeekends: true}
+  startDate             DateTime @map("start_date") @db.Date
+  endDate               DateTime? @map("end_date") @db.Date
+  nextOccurrence        DateTime @map("next_occurrence")
+  assigneeRotation      Json?    @map("assignee_rotation") // [user_id_1, user_id_2]
+  skipHolidays          Boolean  @map("skip_holidays") @default(false)
+  advanceCreationDays   Int      @map("advance_creation_days") @default(0)
+  status                String   @default("active") // active, paused, completed
+  createdAt             DateTime @default(now()) @map("created_at")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  taskInstances         TaskInstance[]
+
+  @@map("recurring_tasks")
+}
+
+model TaskInstance {
+  id                String       @id @default(uuid())
+  recurringTaskId   String       @map("recurring_task_id")
+  mondayItemId      String       @map("monday_item_id")
+  scheduledDate     DateTime     @map("scheduled_date") @db.Date
+  createdAt         DateTime     @default(now()) @map("created_at")
+  completedAt       DateTime?    @map("completed_at")
+  status            String       @default("pending") // pending, completed, overdue
+
+  // Relations
+  recurringTask     RecurringTask @relation(fields: [recurringTaskId], references: [id], onDelete: Cascade)
+
+  @@map("task_instances")
+}
+
+model TimeEntry {
+  id                String   @id @default(uuid())
+  mondayAccountId   String   @map("monday_account_id")
+  mondayItemId      String   @map("monday_item_id")
+  mondayUserId      String   @map("monday_user_id")
+  startTime         DateTime @map("start_time")
+  endTime           DateTime? @map("end_time")
+  durationSeconds   Int      @map("duration_seconds") @default(0)
+  isBillable        Boolean  @map("is_billable") @default(false)
+  notes             String?
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  @@map("time_entries")
+}
+
+model ActiveTimer {
+  id            String   @id @default(uuid())
+  mondayUserId  String   @unique @map("monday_user_id")
+  mondayItemId  String   @map("monday_item_id")
+  startTime     DateTime @map("start_time")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@map("active_timers")
+}
+
+model HolidayCalendar {
+  id                String   @id @default(uuid())
+  mondayAccountId   String   @map("monday_account_id")
+  name              String
+  holidays          Json     // [{date: "2025-12-25", name: "Christmas"}]
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  @@map("holiday_calendars")
+}
+
+model User {
+  id                String   @id @default(uuid())
+  mondayAccountId   String   @map("monday_account_id")
+  mondayUserId      String   @unique @map("monday_user_id")
+  accessToken       String   @map("access_token")
+  refreshToken      String?  @map("refresh_token")
+  tokenExpiresAt    DateTime? @map("token_expires_at")
+  email             String?
+  name              String?
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
