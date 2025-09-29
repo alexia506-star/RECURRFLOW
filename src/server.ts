@@ -6,6 +6,7 @@ import session from 'express-session';
 import passport from './middleware/auth';
 import authRoutes from './routes/auth';
 import recurringTaskRoutes from './routes/recurringTasks';
+import { startScheduler } from './lib/scheduler';
 
 // Load environment variables
 dotenv.config();
@@ -83,6 +84,9 @@ app.listen(PORT, () => {
   console.log(`🚀 RecurFlow Pro server running on port ${PORT}`);
   console.log(`📊 Health check available at http://localhost:${PORT}/health`);
   console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+  
+  // Start the recurring task scheduler
+  startScheduler();
 });
 
 export default app;

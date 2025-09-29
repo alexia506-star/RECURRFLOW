@@ -3,6 +3,7 @@ import { z } from 'zod';
 import prisma from '../lib/database';
 import { ensureAuthenticated } from '../middleware/auth';
 import { CreateRecurringTaskSchema, UpdateRecurringTaskSchema } from '../validation/schemas';
+import { calculateNextOccurrence } from '../lib/recurrence';
 
 const router = express.Router();
 
@@ -136,27 +137,16 @@ function calculateNextOccurrence(
   recurrenceValue: any,
   startDate: Date
 ): Date {
-  const nextDate = new Date(startDate);
-  
-  switch (recurrenceType) {
-    case 'daily':
-      nextDate.setDate(nextDate.getDate() + (recurrenceValue.interval || 1));
-      break;
-    case 'weekly':
-      // For now, simple weekly increment - will be enhanced in next phase
-      nextDate.setDate(nextDate.getDate() + 7 * (recurrenceValue.interval || 1));
-      break;
-    case 'monthly':
-      nextDate.setMonth(nextDate.getMonth() + (recurrenceValue.interval || 1));
-      break;
-    case 'yearly':
-      nextDate.setFullYear(nextDate.getFullYear() + (recurrenceValue.interval || 1));
-      break;
-    default:
-      nextDate.setDate(nextDate.getDate() + 1);
-  }
-
-  return nextDate;
+  // Use the comprehensive recurrence calculation from lib/recurrence
+  return calculateNextOccurrence(
+    {
+      recurrence_type: recurrenceType as any,
+      recurrence_value: recurrenceValue,
+      skip_holidays: false,
+      start_date: startDate
+    },
+    startDate
+  );
 }
 
 export default router;
