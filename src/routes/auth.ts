@@ -1,5 +1,6 @@
 import express from 'express';
 import passport from '../middleware/auth';
+import { MondayTokenResponse } from '../types';
 
 const router = express.Router();
 
@@ -45,7 +46,7 @@ router.post('/monday', async (req, res) => {
       })
     });
 
-    const tokenData = await tokenResponse.json();
+    const tokenData = await tokenResponse.json() as MondayTokenResponse;
     
     if (!tokenResponse.ok) {
       return res.status(400).json({ error: 'Failed to exchange code for token', details: tokenData });
