@@ -6,6 +6,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import session from 'express-session';
+import path from 'path';
 import passport from './middleware/auth';
 import authRoutes from './routes/auth';
 import recurringTaskRoutes from './routes/recurringTasks';
@@ -41,6 +42,10 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Serve static files
+app.use('/static', express.static(path.join(__dirname, '../public/static')));
+app.use(express.static(path.join(__dirname, '../public')));
+
 // Routes
 app.use('/auth', authRoutes);
 app.use('/api/recurring-tasks', recurringTaskRoutes);
@@ -53,6 +58,11 @@ app.get('/health', (req: Request, res: Response) => {
     uptime: process.uptime(),
     environment: process.env.NODE_ENV || 'development'
   });
+});
+
+// Serve React app for dashboard
+app.get('/dashboard', (req: Request, res: Response) => {
+  res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
 // Basic error handling middleware
