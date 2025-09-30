@@ -10,6 +10,7 @@ import path from 'path';
 import passport from './middleware/auth';
 import authRoutes from './routes/auth';
 import recurringTaskRoutes from './routes/recurringTasks';
+import timeTrackingRoutes from './routes/timeTracking';
 import { startScheduler } from './lib/scheduler';
 
 const app = express();
@@ -49,6 +50,7 @@ app.use(express.static(path.join(__dirname, '../public')));
 // Routes
 app.use('/auth', authRoutes);
 app.use('/api/recurring-tasks', recurringTaskRoutes);
+app.use('/api/time-tracking', timeTrackingRoutes);
 
 // Health check endpoint
 app.get('/health', (req: Request, res: Response) => {
