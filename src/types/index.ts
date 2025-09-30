@@ -66,4 +66,3 @@ export interface ActiveTimer {
   monday_item_id: string;
   start_time: Date;
   updated_at: Date;
-}
