@@ -95,7 +95,6 @@ router.put('/:id', async (req, res) => {
     if (validatedData.recurrenceType || validatedData.recurrenceValue || validatedData.startDate) {
       nextOccurrence = calculateNextOccurrence(
         {
-          recurrence_type: validatedData.recurrenceType || existingTask.recurrenceType,
           recurrence_type: validatedData.recurrenceType || (existingTask.recurrenceType as 'daily' | 'weekly' | 'monthly' | 'yearly'),
           recurrence_value: validatedData.recurrenceValue || (existingTask.recurrenceValue as any),
           start_date: validatedData.startDate ? new Date(validatedData.startDate) : existingTask.startDate,
