@@ -63,7 +63,7 @@ router.post('/', async (req, res) => {
     res.status(201).json(recurringTask);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ error: 'Validation failed', details: error.errors });
+      return res.status(400).json({ error: 'Validation failed', details: error.issues });
     }
     console.error('Error creating recurring task:', error);
     res.status(500).json({ error: 'Failed to create recurring task' });
@@ -108,7 +108,7 @@ router.put('/:id', async (req, res) => {
     res.json(updatedTask);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ error: 'Validation failed', details: error.errors });
+      return res.status(400).json({ error: 'Validation failed', details: error.issues });
     }
     console.error('Error updating recurring task:', error);
     res.status(500).json({ error: 'Failed to update recurring task' });
@@ -130,23 +130,5 @@ router.delete('/:id', async (req, res) => {
     res.status(500).json({ error: 'Failed to delete recurring task' });
   }
 });
-
-// Helper function to calculate next occurrence
-function calculateNextOccurrence(
-  recurrenceType: string,
-  recurrenceValue: any,
-  startDate: Date
-): Date {
-  // Use the comprehensive recurrence calculation from lib/recurrence
-  return calculateNextOccurrence(
-    {
-      recurrence_type: recurrenceType as any,
-      recurrence_value: recurrenceValue,
-      skip_holidays: false,
-      start_date: startDate
-    },
-    startDate
-  );
-}
 
 export default router;
