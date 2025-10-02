@@ -47,8 +47,11 @@ router.post('/', async (req, res) => {
     // Calculate initial next occurrence
     const nextOccurrence = calculateNextOccurrence(
       {
-        type: validatedData.recurrenceType,
-        value: validatedData.recurrenceValue
+        recurrence_type: validatedData.recurrenceType,
+        recurrence_value: validatedData.recurrenceValue,
+        start_date: new Date(validatedData.startDate),
+        end_date: validatedData.endDate ? new Date(validatedData.endDate) : null,
+        skip_holidays: validatedData.skipHolidays || false
       },
       new Date(validatedData.startDate)
     );
@@ -92,8 +95,11 @@ router.put('/:id', async (req, res) => {
     if (validatedData.recurrenceType || validatedData.recurrenceValue || validatedData.startDate) {
       nextOccurrence = calculateNextOccurrence(
         {
-          type: validatedData.recurrenceType || existingTask.recurrenceType,
-          value: validatedData.recurrenceValue || existingTask.recurrenceValue
+          recurrence_type: validatedData.recurrenceType || existingTask.recurrenceType,
+          recurrence_value: validatedData.recurrenceValue || existingTask.recurrenceValue,
+          start_date: validatedData.startDate ? new Date(validatedData.startDate) : existingTask.startDate,
+          end_date: validatedData.endDate ? new Date(validatedData.endDate) : existingTask.endDate,
+          skip_holidays: validatedData.skipHolidays !== undefined ? validatedData.skipHolidays : (existingTask.skipHolidays || false)
         },
         validatedData.startDate ? new Date(validatedData.startDate) : existingTask.startDate
       );
