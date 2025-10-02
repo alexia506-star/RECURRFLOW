@@ -52,8 +52,10 @@ router.post('/monday', async (req, res) => {
       return res.status(400).json({ error: 'Failed to exchange code for token', details: tokenData });
     }
 
-    // Store tokens in session or database
-    req.session.mondayTokens = tokenData;
+    // Store tokens in session
+    if (req.session) {
+      (req.session as any).mondayTokens = tokenData;
+    }
     
     res.json({ 
       success: true, 

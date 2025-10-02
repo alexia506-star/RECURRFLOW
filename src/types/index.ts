@@ -18,6 +18,15 @@ export interface MondayContext {
   itemId?: string;
 }
 
+// Monday.com OAuth token response
+export interface MondayTokenResponse {
+  access_token: string;
+  token_type: string;
+  expires_in: number;
+  scope: string;
+  refresh_token?: string;
+}
+
 // Recurring task types
 export interface RecurringTask {
   id: string;
@@ -58,15 +67,6 @@ export interface TimeEntry {
   notes?: string;
   created_at: Date;
   updated_at: Date;
-}
-
-// Monday.com OAuth token response
-export interface MondayTokenResponse {
-  access_token: string;
-  token_type: string;
-  expires_in: number;
-  scope: string;
-  refresh_token?: string;
 }
 
 export interface ActiveTimer {
