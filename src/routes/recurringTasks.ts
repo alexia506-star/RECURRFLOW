@@ -46,8 +46,10 @@ router.post('/', async (req, res) => {
     
     // Calculate initial next occurrence
     const nextOccurrence = calculateNextOccurrence(
-      validatedData.recurrenceType,
-      validatedData.recurrenceValue,
+      {
+        type: validatedData.recurrenceType,
+        value: validatedData.recurrenceValue
+      },
       new Date(validatedData.startDate)
     );
 
@@ -89,8 +91,10 @@ router.put('/:id', async (req, res) => {
     let nextOccurrence = existingTask.nextOccurrence;
     if (validatedData.recurrenceType || validatedData.recurrenceValue || validatedData.startDate) {
       nextOccurrence = calculateNextOccurrence(
-        validatedData.recurrenceType || existingTask.recurrenceType,
-        validatedData.recurrenceValue || existingTask.recurrenceValue,
+        {
+          type: validatedData.recurrenceType || existingTask.recurrenceType,
+          value: validatedData.recurrenceValue || existingTask.recurrenceValue
+        },
         validatedData.startDate ? new Date(validatedData.startDate) : existingTask.startDate
       );
     }
