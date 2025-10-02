@@ -97,7 +97,7 @@ router.put('/:id', async (req, res) => {
         {
           recurrence_type: validatedData.recurrenceType || existingTask.recurrenceType,
           recurrence_type: validatedData.recurrenceType || (existingTask.recurrenceType as 'daily' | 'weekly' | 'monthly' | 'yearly'),
-          recurrence_value: validatedData.recurrenceValue || existingTask.recurrenceValue,
+          recurrence_value: validatedData.recurrenceValue || (existingTask.recurrenceValue as any),
           start_date: validatedData.startDate ? new Date(validatedData.startDate) : existingTask.startDate,
           end_date: validatedData.endDate ? new Date(validatedData.endDate) : (existingTask.endDate || undefined),
           skip_holidays: validatedData.skipHolidays !== undefined ? validatedData.skipHolidays : (existingTask.skipHolidays || false)
