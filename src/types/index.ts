@@ -60,6 +60,15 @@ export interface TimeEntry {
   updated_at: Date;
 }
 
+// Monday.com OAuth token response
+export interface MondayTokenResponse {
+  access_token: string;
+  token_type: string;
+  expires_in: number;
+  scope: string;
+  refresh_token?: string;
+}
+
 export interface ActiveTimer {
   id: string;
   monday_user_id: string;
