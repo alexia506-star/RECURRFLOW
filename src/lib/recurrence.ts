@@ -1,4 +1,4 @@
-import { addDays, addWeeks, addMonths, addYears, isWeekend, format, setDate, getDay, startOfMonth, addWeeks as addWeeksToDate } from 'date-fns';
+import { addDays, addWeeks, addMonths, addYears, isWeekend, format, setDate, getDay, startOfMonth } from 'date-fns';
 
 export interface RecurrenceRule {
   recurrence_type: 'daily' | 'weekly' | 'monthly' | 'yearly';

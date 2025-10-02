@@ -1,6 +1,5 @@
 import express from 'express';
 import passport from '../middleware/auth';
-import { MondayTokenResponse } from '../types';
 
 const router = express.Router();
 
@@ -46,21 +45,21 @@ router.post('/monday', async (req, res) => {
       })
     });
 
-    const tokenData = await tokenResponse.json() as MondayTokenResponse;
+    const tokenData = await tokenResponse.json();
     
     if (!tokenResponse.ok) {
       return res.status(400).json({ error: 'Failed to exchange code for token', details: tokenData });
     }
 
-    // Store tokens in session
+    // Store tokens in session (simplified)
     if (req.session) {
       (req.session as any).mondayTokens = tokenData;
     }
     
     res.json({ 
       success: true, 
-      access_token: tokenData.access_token,
-      expires_in: tokenData.expires_in 
+      access_token: (tokenData as any).access_token,
+      expires_in: (tokenData as any).expires_in 
     });
   } catch (error) {
     console.error('OAuth token exchange error:', error);
