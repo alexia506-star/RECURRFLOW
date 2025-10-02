@@ -50,7 +50,7 @@ router.post('/', async (req, res) => {
         recurrence_type: validatedData.recurrenceType,
         recurrence_value: validatedData.recurrenceValue,
         start_date: new Date(validatedData.startDate),
-        end_date: validatedData.endDate ? new Date(validatedData.endDate) : null,
+        end_date: validatedData.endDate ? new Date(validatedData.endDate) : undefined,
         skip_holidays: validatedData.skipHolidays || false
       },
       new Date(validatedData.startDate)
@@ -98,7 +98,7 @@ router.put('/:id', async (req, res) => {
           recurrence_type: validatedData.recurrenceType || existingTask.recurrenceType,
           recurrence_value: validatedData.recurrenceValue || existingTask.recurrenceValue,
           start_date: validatedData.startDate ? new Date(validatedData.startDate) : existingTask.startDate,
-          end_date: validatedData.endDate ? new Date(validatedData.endDate) : existingTask.endDate,
+          end_date: validatedData.endDate ? new Date(validatedData.endDate) : (existingTask.endDate || undefined),
           skip_holidays: validatedData.skipHolidays !== undefined ? validatedData.skipHolidays : (existingTask.skipHolidays || false)
         },
         validatedData.startDate ? new Date(validatedData.startDate) : existingTask.startDate
